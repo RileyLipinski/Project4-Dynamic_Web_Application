@@ -1,0 +1,27 @@
+{
+    "name": "Web-Application-Server",
+    "version": "0.0.0",
+    "description": "Server that uses RESTful server to display crime stats",
+    "author": {
+        "name": "Riley Lipinski",
+        "email": "lipi8497@stthomas.edu"
+    },
+    "contributors": [
+        {
+            "name": "Austin Hippe",
+            "email": "hipp5302@stthomas.edu"
+        },
+        {
+            "name": "Riley Lipinski",
+            "email": "lipi8497@stthomas.edu"
+        }
+    ],
+    "main": "server.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nicholaslanger/Project2-DynamicServer.git"
+    },
+    "dependencies": {
+        "express": "^4.17.1"
+    }
+}
