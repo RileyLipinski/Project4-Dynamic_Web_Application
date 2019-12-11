@@ -1,2 +1,2 @@
 # Project4-Dynamic_Web_Application
-idk hi
+In this Project, Riley, and I, Austin Hippe, created a Web page that displayed the crimes committed in St. Paul on a map by neighborhood. It displays each of the neighborhoods in St.Paul, and puts markers at each with how many crimes were committed in each neighborhood. There is also a table that displays what crimes are committed based on what neighborhoods are visible. You can also enter in a lat and long to get a position on the graph as well.
