@@ -1,6 +1,7 @@
 // Built-in Node.js modules
 var fs = require('fs');
 var path = require('path');
+var cors = require('cors');
 
 // NPM modules
 var express = require('express');
@@ -10,6 +11,7 @@ var public_dir = path.join(__dirname, 'public');
 
 var app = express();
 var port = 8000;
+app.use(cors());
 
 app.get('/', (req, res) =>
 {
