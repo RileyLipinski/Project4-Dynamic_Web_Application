@@ -116,16 +116,46 @@ function updatePan()
             //console.log(crime_data[key].neighborhood_number);
             if(neighborhoods["N" + crime_data[key].neighborhood_number][0] < parseFloat(mymap.getBounds()._northEast.lat) && neighborhoods["N" + crime_data[key].neighborhood_number][0] > parseFloat(mymap.getBounds()._southWest.lat) && neighborhoods["N" + crime_data[key].neighborhood_number][1] < parseFloat(mymap.getBounds()._northEast.lng) && neighborhoods["N" + crime_data[key].neighborhood_number][1] > parseFloat(mymap.getBounds()._southWest.lng))
             {
-                
-                mapTable.crimes[key] = 
+                if((crime_data[key].code >= 110 && crime_data[key].code <= 220) || (crime_data[key].code >= 400 && crime_data[key].code <= 453) || (crime_data[key].code >= 810 && crime_data[key].code <= 863))
                 {
-                    date: crime_data[key].date,
-                    time: crime_data[key].time,
-                    incident: crime_data[key].incident,
-                    police_grid: crime_data[key].police_grid,
-                    neighborhood: neighborhoods["N" + crime_data[key].neighborhood_number][3],
-                    block: crime_data[key].block
+                    mapTable.crimes[key] = 
+                    {
+                        date: crime_data[key].date,
+                        time: crime_data[key].time,
+                        incident: crime_data[key].incident,
+                        police_grid: crime_data[key].police_grid,
+                        neighborhood: neighborhoods["N" + crime_data[key].neighborhood_number][3],
+                        block: crime_data[key].block,
+                        color: "lightcoral"
+                    }
                 }
+                else if((crime_data[key].code >= 300 && crime_data[key].code <= 374) || (crime_data[key].code >= 500 && crime_data[key].code <= 722) || (crime_data[key].code >= 900 && crime_data[key].code <= 1436))
+                {
+                    mapTable.crimes[key] = 
+                    {
+                        date: crime_data[key].date,
+                        time: crime_data[key].time,
+                        incident: crime_data[key].incident,
+                        police_grid: crime_data[key].police_grid,
+                        neighborhood: neighborhoods["N" + crime_data[key].neighborhood_number][3],
+                        block: crime_data[key].block,
+                        color: "yellow"
+                    }
+                }
+                else
+                {
+                    mapTable.crimes[key] = 
+                    {
+                        date: crime_data[key].date,
+                        time: crime_data[key].time,
+                        incident: crime_data[key].incident,
+                        police_grid: crime_data[key].police_grid,
+                        neighborhood: neighborhoods["N" + crime_data[key].neighborhood_number][3],
+                        block: crime_data[key].block,
+                        color: "palegreen"
+                    }
+                }
+
             }
         }
         //mapTable.changeReady(true);

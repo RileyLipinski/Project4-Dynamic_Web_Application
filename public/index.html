@@ -71,7 +71,7 @@
         #mapTable 
         {
             height: 35rem;
-            width: 47rem;
+            width: 52rem;
         }
 	</style>
 </head>
@@ -102,7 +102,7 @@
                 <th>Neighborhood</th>
                 <th>Block</th>
             </tr>
-                <tr v-for="item in crimes">
+                <tr v-for="item in crimes" v-bind:style="{ backgroundColor: item.color}">
                         <td>{{ item.date }}</td>
                         <td>{{ item.time }}</td>
                         <td>{{ item.incident }}</td>
@@ -112,26 +112,57 @@
                     </tr>
             </table>
         </div>
-        <div class = "two columns">
-            <h6>Legend</h6>
-            <p> Red = bad </p>
-            <p> Blue = happy</p>
+        <div style="background-color: gray;" class = "two columns">
+            <h4>Legend</h4>
+            <p style="color: red;"> Red = Violent Crimes </p>
+            <p style="color: yellow;"> Yellow = Property and Theft Crimes</p>
+            <p style="color: green;"> Green = Other</p>
         </div>
     </div>
-
+    <div class="row">
+        <div class="six columns" id="dateRange">
+                <input placeholder="Date Range" type="text" v-model="Date">
+                <button type="button" v-on:click="sendDate">Search</button>
+        </div>
+        <div class="six columns" id="timeRange">
+                <input placeholder="Time Range" type="text" v-model="Time">
+                <button type="button" v-on:click="sendTime">Search</button>
+        </div>
+    </div>
     <div class= "row">
         <div class="six columns" id = "checkboxes">
-            <p style="display:inline">Filters:</p>
-            <input type="checkbox" id="rape" value="RAPE" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Rape 
-            <input type="checkbox" id="murder" value="MURDER" v-model="checkedIncidents"  @change="updateJSON(checkedIncidents)"> Murder
-            <input type="checkbox" id="assault" value="ASSAULT" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Assault
-            <input type="checkbox" id="property_damage" value="PROPERTY_DAMAGE" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Property Damage
-            <input type="checkbox" id="narcotics" value="NARCOTICS" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Narcotics
-            <input type="checkbox" id="other" value="OTHER" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Other
-            <!-- <label for="rape">Rape</label> -->
+            <p style="display:inline">Incident Filters:</p>
+            <input type="checkbox" id="rape" value="RAPE" v-model="checkedIncidents" @change="updateJSON()"> Rape 
+            <input type="checkbox" id="murder" value="MURDER" v-model="checkedIncidents"  @change="updateJSON()"> Murder
+            <input type="checkbox" id="assault" value="ASSAULT" v-model="checkedIncidents" @change="updateJSON()"> Assault
+            <input type="checkbox" id="property_damage" value="PROPERTY_DAMAGE" v-model="checkedIncidents" @change="updateJSON()"> Property Damage
+            <input type="checkbox" id="narcotics" value="NARCOTICS" v-model="checkedIncidents" @change="updateJSON()"> Narcotics
+            <input type="checkbox" id="other" value="OTHER" v-model="checkedIncidents" @change="updateJSON()"> Other
+            <p style="display:inline">Neighborhood Filters:</p>
+            <input type="checkbox" id="n1" value="N1" v-model="checkedNeighborhoods" @change="updateJSON()"> Conway/Battlecreek/Highwood 
+            <input type="checkbox" id="n2" value="N2" v-model="checkedNeighborhoods" @change="updateJSON()"> Greater East Side
+            <input type="checkbox" id="n3" value="N3" v-model="checkedNeighborhoods" @change="updateJSON()"> West Side 
+            <input type="checkbox" id="n4" value="N4" v-model="checkedNeighborhoods" @change="updateJSON()"> Dayton's Bluff 
+            <input type="checkbox" id="n5" value="N5" v-model="checkedNeighborhoods" @change="updateJSON()"> Payne/Phalen 
+            <input type="checkbox" id="n6" value="N6" v-model="checkedNeighborhoods" @change="updateJSON()"> North End 
+            <input type="checkbox" id="n7" value="N7" v-model="checkedNeighborhoods" @change="updateJSON()"> Thomas/Dale(Frogtown) 
+            <input type="checkbox" id="n8" value="N8" v-model="checkedNeighborhoods" @change="updateJSON()"> Summit/University 
+            <input type="checkbox" id="n9" value="N9" v-model="checkedNeighborhoods" @change="updateJSON()"> West Seventh 
+            <input type="checkbox" id="n10" value="N10" v-model="checkedNeighborhoods" @change="updateJSON()"> Como 
+            <input type="checkbox" id="n11" value="N11" v-model="checkedNeighborhoods" @change="updateJSON()"> Hamline/Midway 
+            <input type="checkbox" id="n12" value="N12" v-model="checkedNeighborhoods" @change="updateJSON()"> St. Anthony 
+            <input type="checkbox" id="n13" value="N13" v-model="checkedNeighborhoods" @change="updateJSON()"> Union Park 
+            <input type="checkbox" id="n14" value="N14" v-model="checkedNeighborhoods" @change="updateJSON()"> Macalester-Groveland 
+            <input type="checkbox" id="n15" value="N15" v-model="checkedNeighborhoods" @change="updateJSON()"> Highland 
+            <input type="checkbox" id="n16" value="N16" v-model="checkedNeighborhoods" @change="updateJSON()"> Summit Hill 
+            <input type="checkbox" id="n17" value="N17" v-model="checkedNeighborhoods" @change="updateJSON()"> Capitol River 
         </div>
     </div>
-    
+    <div class="row">
+        <div class="two columns">
+            <a href="about.html" style="font-size: x-large;">About Page</a>
+        </div>
+    </div>
 	<div id="dialog-form">
         <label for="name">URL for St. Paul Crime API <br/>(ex: http://cisc-dean.stthomas.edu:8000):</label>
         <input type="text" id="prompt_input" class="text ui-widget-content ui-corner-all" style="width: 320px;"/>
@@ -189,7 +220,8 @@
 	<div id="dialog-form">
 			<label for="name">URL for St. Paul Crime API <br/>(ex: http://cisc-dean.stthomas.edu:8000):</label>
 			<input type="text" id="prompt_input" class="text ui-widget-content ui-corner-all" style="width: 320px;"/>
-	</div> -->
+    </div> -->
+    
 	<script src="/js/vuestuff.js"></script>
 	
 </body>
