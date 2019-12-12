@@ -18,6 +18,7 @@
     <script type="application/javascript">
         var crime_data;
         var crime_in_view;
+        var crime_url;
         function Prompt() {
             $("#dialog-form").dialog({
                 autoOpen: true,
@@ -26,6 +27,7 @@
                 buttons: {
                     "Ok": function() {
                         var prompt_input = $("#prompt_input");
+                        crime_url = prompt_input.val();
                         Init(prompt_input.val());
                         $(this).dialog("close");
                     },
@@ -49,7 +51,11 @@
         }
     </script>
 	<style>
-		#mymap{ height: 400px; }
+        #mymap{ height: 400px; width: 800px;}
+        .scrollit {
+            overflow:scroll;
+            height:165px;
+        }
 	</style>
 </head>
 <body onload="Prompt()">
@@ -59,7 +65,28 @@
         <input type="text" v-model="Location">
         <button type="button" v-on:click="sendLocation">Search</button>
     </div>
+    <p>NOTE: if using address, dont use commas</p>
+    <div id="checkboxes">
+    <ul>
+        <li><input type="checkbox" id="rape" value="RAPE" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"></li>
+        <label for="rape">Rape</label>
+        <li><input type="checkbox" id="murder" value="MURDER" v-model="checkedIncidents"  @change="updateJSON(checkedIncidents)"></li>
+        <label for="murder">Murder</label>
+        <li><input type="checkbox" id="theft" value="THEFT" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"></li>
+        <label for="theft">Theft</label>
+        <li><input type="checkbox" id="assault" value="ASSAULT" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"></li>
+        <label for="assault">Assault</label>
+        <li><input type="checkbox" id="property_damage" value="PROPERTY_DAMAGE" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"></li>
+        <label for="property_damage">Property Damage</label>
+        <li><input type="checkbox" id="narcotics" value="NARCOTICS" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"></li>
+        <label for="narcotics">Narcotics</label>
+        <li><input type="checkbox" id="other" value="OTHER" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"></li>
+        <label for="other">Other</label>
+        <li>{{ checkedIncidents }}</li>
+    </ul>
+    </div>
     <div id="mapTable">
+        <div class="scrollit">
         <table v-if="crimes != {}">
         <tr>
             <th>Date</th>
@@ -69,7 +96,7 @@
             <th>Neighborhood</th>
             <th>Block</th>
         </tr>
-            <tr v-for="item in crimes">
+            <tr v-for="item in crimes" >
                     <td>{{ item.date }}</td>
                     <td>{{ item.time }}</td>
                     <td>{{ item.incident }}</td>
@@ -78,10 +105,10 @@
                     <td>{{ item.block }}</td>
                 </tr>
         </table>
+         </div>
     </div>
-    
 	<div id="dialog-form">
-			<label for="name">URL for St. Paul Crime API:</label>
+			<label for="name">URL for St. Paul Crime API <br/>(ex: http://cisc-dean.stthomas.edu:8000):</label>
 			<input type="text" id="prompt_input" class="text ui-widget-content ui-corner-all" style="width: 320px;"/>
 	</div>
 	<script src="/js/vuestuff.js"></script>

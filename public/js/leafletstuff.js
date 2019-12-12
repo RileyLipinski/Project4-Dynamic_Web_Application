@@ -2,6 +2,7 @@ var mymap;
 var globalLat = 44.953;
 var globalLong = -93.090;
 var neighborhoods;
+var checkcount = 0;
 function neighborhoods(crime_api_url)
 {
     $.getJSON(crime_api_url + "/neighborhoods", (data) =>
@@ -31,9 +32,35 @@ function neighborhoods(crime_api_url)
 
 function mapUpdate(location)
 {
-    globalLat = parseFloat(location.split(",")[0]);
-    globalLong = parseFloat(location.split(",")[1]);
-    mymap.panTo(new L.LatLng(globalLat, globalLong), 13);
+    let coordarray = location;
+    if(location.indexOf(",") >= 0)
+    {
+        coordarray = location.split(",");
+    }
+    if(coordarray.length == 2)
+    {
+        globalLat = parseFloat(coordarray[0].trim());
+        globalLong = parseFloat(coordarray[1].trim());
+        mymap.panTo(new L.LatLng(globalLat, globalLong), 13);
+    }
+    else
+    {
+        try
+        {
+            let querystring = "https://nominatim.openstreetmap.org/?addressdetails=1&q=" + location.replace(" ", "+") + "&format=json&limit=1";
+            $.getJSON(querystring, (data) =>
+            {
+                console.log(data);
+                globalLat = parseFloat(data["0"].lat);
+                console.log(globalLat);
+                globalLong = parseFloat(data["0"].lon);
+                mymap.panTo(new L.LatLng(globalLat, globalLong), 13);
+            });
+        }
+        catch(e)
+        {   
+        }
+    }
     console.log(mymap.getCenter());
 
 }
@@ -54,6 +81,7 @@ function mapInit()
     }
     for(var key2 in neighborhoods)
     {
+        
         let marker =  L.marker([neighborhoods[key2][0], neighborhoods[key2][1]], {title: neighborhoods[key2][3] + ""}).addTo(mymap);
         neighborhoods[key2][4] = marker;
         //console.log(JSON.stringify(neighborhoods));
@@ -105,4 +133,23 @@ function updatePan()
         //console.log(crime_in_view);
         //console.log(mymap.getBounds());
     });
+}
+
+function updateMarkers()
+{
+    console.log("called");
+    for(let neighkey in neighborhoods)
+    {
+        neighborhoods[neighkey][2] = 0;
+    }
+    for(let crimekey in crime_data)
+    {
+        neighborhoods["N" + crime_data[crimekey].neighborhood_number][2]++; 
+    }
+    console.log(JSON.stringify(crime_data));
+    for(let neighkey in neighborhoods)
+    {
+        console.log(neighborhoods[neighkey][2]);
+        neighborhoods[neighkey][4].bindPopup(neighborhoods[neighkey][2] + "").openPopup();
+    }
 }
