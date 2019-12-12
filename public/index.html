@@ -1,44 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>Crime Statistics in St. Paul</title>
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Crime Statistics in St. Paul</title>
+    <!-- Skeleton -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Leaflet-->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-   crossorigin=""/>
-   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-   <script type="application/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-   <script type="application/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""/>
+    <!-- jquery -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="application/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="application/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <!--Leaflet-->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
 	integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
 	crossorigin=""></script>
-	<script src="/js/leafletstuff.js"></script>
+    <script src="/js/leafletstuff.js"></script>
+
     <script type="application/javascript">
         var crime_data;
         var crime_in_view;
         var crime_url;
-        function Prompt() {
+        function Prompt() 
+        {
             $("#dialog-form").dialog({
                 autoOpen: true,
                 modal: true,
                 width: "360px",
                 buttons: {
-                    "Ok": function() {
+                    "Ok": function() 
+                    {
                         var prompt_input = $("#prompt_input");
                         crime_url = prompt_input.val();
                         Init(prompt_input.val());
                         $(this).dialog("close");
                     },
-                    "Cancel": function() {
+                    "Cancel": function() 
+                    {
                         $(this).dialog("close");
                     }
                 }
             });
         }
 
-        function Init(crime_api_url) {
+        function Init(crime_api_url) 
+        {
             console.log(crime_api_url);
             neighborhoods(crime_api_url);
             $.getJSON(crime_api_url + "/incidents?start_date=2019-10-01&end_date=2019-10-31", (data) =>
@@ -51,21 +63,87 @@
         }
     </script>
 	<style>
-        #mymap{ height: 400px; width: 800px;}
-        .scrollit {
-            overflow:scroll;
-            height:165px;
+		#mymap{ height: 35rem; width: 50rem; }
+        .scrollit 
+        {
+        overflow:scroll;
+        }
+        #mapTable 
+        {
+            height: 35rem;
+            width: 47rem;
         }
 	</style>
 </head>
 <body onload="Prompt()">
-	<div id="mymap"></div>
+    <div class="row">
+        <div class = "three columns offset-by-four">
+            <h3>St. Paul Crimes</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class = "five columns">
+            <div id="mymap"></div>
+            <div id="mapInput">
+                Map Location:
+                <input type="text" v-model="Location">
+                <button type="button" v-on:click="sendLocation">Search</button>
+            </div>
+            <p>NOTE: if using address, dont use commas</p>
+        </div>
+        
+        <div id="mapTable" class="five columns scrollit">
+            <table v-if="crimes != {}">
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Incident</th>
+                <th>Police Grid</th>
+                <th>Neighborhood</th>
+                <th>Block</th>
+            </tr>
+                <tr v-for="item in crimes">
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.time }}</td>
+                        <td>{{ item.incident }}</td>
+                        <td>{{ item.police_grid }}</td>
+                        <td>{{ item.neighborhood }}</td>
+                        <td>{{ item.block }}</td>
+                    </tr>
+            </table>
+        </div>
+        <div class = "two columns">
+            <h6>Legend</h6>
+            <p> Red = bad </p>
+            <p> Blue = happy</p>
+        </div>
+    </div>
+
+    <div class= "row">
+        <div class="six columns" id = "checkboxes">
+            <p style="display:inline">Filters:</p>
+            <input type="checkbox" id="rape" value="RAPE" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Rape 
+            <input type="checkbox" id="murder" value="MURDER" v-model="checkedIncidents"  @change="updateJSON(checkedIncidents)"> Murder
+            <input type="checkbox" id="assault" value="ASSAULT" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Assault
+            <input type="checkbox" id="property_damage" value="PROPERTY_DAMAGE" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Property Damage
+            <input type="checkbox" id="narcotics" value="NARCOTICS" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Narcotics
+            <input type="checkbox" id="other" value="OTHER" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"> Other
+            <!-- <label for="rape">Rape</label> -->
+        </div>
+    </div>
+    
+	<div id="dialog-form">
+        <label for="name">URL for St. Paul Crime API <br/>(ex: http://cisc-dean.stthomas.edu:8000):</label>
+        <input type="text" id="prompt_input" class="text ui-widget-content ui-corner-all" style="width: 320px;"/>
+</div>
+	<!-- <div id="mymap"></div>
 	<div id="mapInput">
         Map Location:
         <input type="text" v-model="Location">
         <button type="button" v-on:click="sendLocation">Search</button>
     </div>
     <p>NOTE: if using address, dont use commas</p>
+    
     <div id="checkboxes">
     <ul>
         <li><input type="checkbox" id="rape" value="RAPE" v-model="checkedIncidents" @change="updateJSON(checkedIncidents)"></li>
@@ -85,6 +163,7 @@
         <li>{{ checkedIncidents }}</li>
     </ul>
     </div>
+
     <div id="mapTable">
         <div class="scrollit">
         <table v-if="crimes != {}">
@@ -110,7 +189,7 @@
 	<div id="dialog-form">
 			<label for="name">URL for St. Paul Crime API <br/>(ex: http://cisc-dean.stthomas.edu:8000):</label>
 			<input type="text" id="prompt_input" class="text ui-widget-content ui-corner-all" style="width: 320px;"/>
-	</div>
+	</div> -->
 	<script src="/js/vuestuff.js"></script>
 	
 </body>
