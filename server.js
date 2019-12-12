@@ -28,6 +28,21 @@ app.get('/', (req, res) =>
     });
 });
 
+app.get('/about.html', (req, res) =>
+{
+    fs.readFile(path.join(public_dir, "about.html"), (err, data) =>
+    {
+        if(err)
+        {
+            console.log(err);
+        }
+        else
+        {
+            res.send(data.toString());
+        }
+    });
+});
+
 app.use(express.static(public_dir));
 
 var server = app.listen(port);
