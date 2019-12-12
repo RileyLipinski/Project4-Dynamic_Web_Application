@@ -63,15 +63,19 @@
         }
     </script>
 	<style>
-		#mymap{ height: 35rem; width: 50rem; }
+        body 
+        {
+            background-image: url('/images/pThEg5.jpg');
+        }
+		#mymap{ height: 30rem; width: 57rem; }
         .scrollit 
         {
         overflow:scroll;
         }
         #mapTable 
         {
-            height: 35rem;
-            width: 52rem;
+            height: 30rem;
+            width: 57rem;
         }
 	</style>
 </head>
@@ -82,19 +86,12 @@
         </div>
     </div>
     <div class="row">
-        <div class = "five columns">
+        <div class = "six columns">
             <div id="mymap"></div>
-            <div id="mapInput">
-                Map Location:
-                <input type="text" v-model="Location">
-                <button type="button" v-on:click="sendLocation">Search</button>
-            </div>
-            <p>NOTE: if using address, dont use commas</p>
         </div>
-        
-        <div id="mapTable" class="five columns scrollit">
+        <div id="mapTable" class="six columns scrollit">
             <table v-if="crimes != {}">
-            <tr>
+            <tr style="background-color: white;">
                 <th>Date</th>
                 <th>Time</th>
                 <th>Incident</th>
@@ -112,32 +109,44 @@
                     </tr>
             </table>
         </div>
-        <div style="background-color: gray;" class = "two columns">
-            <h4>Legend</h4>
-            <p style="color: red;"> Red = Violent Crimes </p>
-            <p style="color: yellow;"> Yellow = Property and Theft Crimes</p>
-            <p style="color: green;"> Green = Other</p>
+    </div>
+    <div class = "row">
+        <div class= "six columns">
+            <div id="mapInput">
+                <p style="display:inline; font-size: 13px;">Map Location:</p>
+                <input style="height: 2rem;"type="text" v-model="Location">
+                <button style="padding: 1px 20px;"type="button" v-on:click="sendLocation">Search</button>
+                <p style="font-size: 9px;display:inline;">NOTE: if using address, dont use commas</p>
+            </div>
+            
         </div>
+        <div  class = "six columns">
+                <h5 style="display:inline;">Legend: </h5>
+                <p style="color: red; display:inline;"> Red = Violent Crimes </p>
+                <p style="color: yellow; display:inline;"> Yellow = Property and Theft Crimes</p>
+                <p style="color: green; display:inline;"> Green = Other</p>
+            </div>
     </div>
     <div class="row">
-        <div class="six columns" id="dateRange">
-                <input placeholder="Date Range" type="text" v-model="Date">
-                <button type="button" v-on:click="sendDate">Search</button>
+        <div class="four columns" id="dateRange">
+                <input style="height: 2rem;" placeholder="Date Range" type="text" v-model="Date">
+                <button style="padding: 1px 20px;"type="button" v-on:click="sendDate">Search</button>
         </div>
-        <div class="six columns" id="timeRange">
-                <input placeholder="Time Range" type="text" v-model="Time">
-                <button type="button" v-on:click="sendTime">Search</button>
+        <div class="four columns" id="timeRange">
+                <input style="height: 2rem;" placeholder="Time Range" type="text" v-model="Time">
+                <button style="padding: 1px 20px;"type="button" v-on:click="sendTime">Search</button>
         </div>
+
     </div>
-    <div class= "row">
-        <div class="six columns" id = "checkboxes">
+     <div class= "row">
+        <div class="twelve columns" id = "checkboxes">
             <p style="display:inline">Incident Filters:</p>
             <input type="checkbox" id="rape" value="RAPE" v-model="checkedIncidents" @change="updateJSON()"> Rape 
             <input type="checkbox" id="murder" value="MURDER" v-model="checkedIncidents"  @change="updateJSON()"> Murder
             <input type="checkbox" id="assault" value="ASSAULT" v-model="checkedIncidents" @change="updateJSON()"> Assault
             <input type="checkbox" id="property_damage" value="PROPERTY_DAMAGE" v-model="checkedIncidents" @change="updateJSON()"> Property Damage
             <input type="checkbox" id="narcotics" value="NARCOTICS" v-model="checkedIncidents" @change="updateJSON()"> Narcotics
-            <input type="checkbox" id="other" value="OTHER" v-model="checkedIncidents" @change="updateJSON()"> Other
+            <input type="checkbox" id="other" value="OTHER" v-model="checkedIncidents" @change="updateJSON()"> Other <br>
             <p style="display:inline">Neighborhood Filters:</p>
             <input type="checkbox" id="n1" value="N1" v-model="checkedNeighborhoods" @change="updateJSON()"> Conway/Battlecreek/Highwood 
             <input type="checkbox" id="n2" value="N2" v-model="checkedNeighborhoods" @change="updateJSON()"> Greater East Side
@@ -157,7 +166,7 @@
             <input type="checkbox" id="n16" value="N16" v-model="checkedNeighborhoods" @change="updateJSON()"> Summit Hill 
             <input type="checkbox" id="n17" value="N17" v-model="checkedNeighborhoods" @change="updateJSON()"> Capitol River 
         </div>
-    </div>
+    </div> 
     <div class="row">
         <div class="two columns">
             <a href="about.html" style="font-size: x-large;">About Page</a>
