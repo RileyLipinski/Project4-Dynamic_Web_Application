@@ -99,7 +99,7 @@
                 <th>Neighborhood</th>
                 <th>Block</th>
             </tr>
-                <tr v-for="item in crimes" v-bind:style="{ backgroundColor: item.color}">
+                <tr v-for="item in crimes" v-bind:style="{ backgroundColor: item.color}" v-on:click="addMarker(item)">
                         <td>{{ item.date }}</td>
                         <td>{{ item.time }}</td>
                         <td>{{ item.incident }}</td>
@@ -128,13 +128,17 @@
             </div>
     </div>
     <div class="row">
-        <div class="four columns" id="dateRange">
+        <div class="six columns" id="dateRange">
+            <p style="display:inline; font-size: 13px;">Date Range:</p>
                 <input style="height: 2rem;" placeholder="Date Range" type="text" v-model="Date">
                 <button style="padding: 1px 20px;"type="button" v-on:click="sendDate">Search</button>
+                <p style="font-size: 9px;display:inline;">Input Format: YYYY-MM-DD,YYYY-MM-DD</p>
         </div>
-        <div class="four columns" id="timeRange">
+        <div class="six columns" id="timeRange">
+            <p style="display:inline; font-size: 13px;">Time Range:</p>
                 <input style="height: 2rem;" placeholder="Time Range" type="text" v-model="Time">
                 <button style="padding: 1px 20px;"type="button" v-on:click="sendTime">Search</button>
+                <p style="font-size: 9px;display:inline;">Input Format: HH:MM:SS,HH:MM:SS</p>
         </div>
 
     </div>

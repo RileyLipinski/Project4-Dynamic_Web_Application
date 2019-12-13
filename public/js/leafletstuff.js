@@ -3,6 +3,7 @@ var globalLat = 44.953;
 var globalLong = -93.090;
 var neighborhoods;
 var checkcount = 0;
+var markers = [];
 function neighborhoods(crime_api_url)
 {
     $.getJSON(crime_api_url + "/neighborhoods", (data) =>
@@ -182,4 +183,32 @@ function updateMarkers()
         console.log(neighborhoods[neighkey][2]);
         neighborhoods[neighkey][4].bindPopup(neighborhoods[neighkey][2] + "").openPopup();
     }
+}
+
+function addMapMarker(item) 
+{
+    var lat;
+    var long;
+    let querystring = "https://nominatim.openstreetmap.org/?addressdetails=1&q=" + item.block.replace("X","0") +  "&format=json&limit=1";
+    console.log(querystring);
+    $.getJSON(querystring, (data) =>
+    {
+        //console.log(data);
+        lat = parseFloat(data["0"].lat);
+        //console.log(globalLat);
+        long = parseFloat(data["0"].lon);
+        console.log(long);
+        var marker = new L.Marker([lat,long], {draggable:true});
+        marker.bindPopup(item.incident + "\n" + item.date + "\n" + item.time);
+        marker.on('mouseover', function (e) {
+            this.openPopup();
+        });
+        marker.on('mouseout', function (e) {
+            this.closePopup();
+        });
+        //marker.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
+        marker.addTo(mymap);
+        markers.push(marker);
+    });
+
 }

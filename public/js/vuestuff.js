@@ -18,6 +18,13 @@ var mapTable = new Vue({
     {
         crimes: {}
         
+    },
+    methods: 
+    {
+        addMarker: function(item)
+        {
+            addMapMarker(item);
+        }
     }
 });
 
