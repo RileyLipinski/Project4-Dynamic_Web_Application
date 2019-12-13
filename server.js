@@ -7,7 +7,7 @@ var cors = require('cors');
 var express = require('express');
 
 
-var public_dir = path.join(__dirname, 'public');
+var public_dir = path.join(__dirname, 'docs');
 
 var app = express();
 var port = 8000;
